@@ -27,6 +27,7 @@ def main():
   else:
     name = 'World'
   print 'Hello', name
+  print 'Howdy'
 
 # This is the standard boilerplate that calls the main() function.
 if __name__ == '__main__':
