@@ -44,14 +44,53 @@ import sys
 # You could write a helper utility function that reads a file
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
+def count_words(filename):
+  wd = {}
+  fd = open(filename,"rU")
+  for line in fd:
+    for word in line.lower().split():
+      if word in wd:
+        wd[word] = wd[word] + 1
+      else:
+        wd[word] = 1
+  return wd
+    
+def print_words(filename):
+  dictWords = count_words(filename)
+  for key in sorted(dictWords.keys()):
+    print key + ': ' + str(dictWords[key])
 
-###
-
+def customSort(tuple):
+  return tuple[1]
+  
+def print_top(filename):
+  dictWords = count_words(filename)
+  sortedDict = sorted(dictWords.items(),key=customSort, reverse=True)
+  for i in range(20):
+    print sortedDict[i][0] + ': ' + str(sortedDict[i][1])
+def print_letters(filename):
+  fd = open(filename,"rU")
+  letters = {}
+  for line in fd:
+    for word in line.lower().split():
+      for kar in word:
+        if kar >= 'a' and kar <= 'z':
+          if kar in letters:
+            letters[kar] = letters[kar] + 1
+          else:
+            letters[kar] = 1
+  total_letters = 0
+  for key in letters.keys(): total_letters = total_letters + letters[key]
+  print "Total letters: ", total_letters
+  
+  for key in sorted(letters.keys()):
+#    print key + ': {:>7d, :f}'.format(letters[key], float(letters[key])/total_letters)
+    print key + ': {:6.3f}'.format(round(100*float(letters[key])/total_letters,3))
 # This basic command line argument parsing code is provided and
 # calls the print_words() and print_top() functions which you must define.
 def main():
   if len(sys.argv) != 3:
-    print 'usage: ./wordcount.py {--count | --topcount} file'
+    print 'usage: ./wordcount.py {--count | --topcount | --countletters} file'
     sys.exit(1)
 
   option = sys.argv[1]
@@ -60,6 +99,8 @@ def main():
     print_words(filename)
   elif option == '--topcount':
     print_top(filename)
+  elif option == '--countletters':
+    print_letters(filename)
   else:
     print 'unknown option: ' + option
     sys.exit(1)
