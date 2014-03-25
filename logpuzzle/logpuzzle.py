@@ -25,6 +25,9 @@ def read_urls(filename):
   Screens out duplicate urls and returns the urls sorted into
   increasing order."""
   # +++your code here+++
+  f = open(filename,"rU")
+  m = re.findall("GET (\S+.jpg)", f.read())
+  return sorted(set(m))
   
 
 def download_images(img_urls, dest_dir):
@@ -36,6 +39,17 @@ def download_images(img_urls, dest_dir):
   Creates the directory if necessary.
   """
   # +++your code here+++
+  f = open(dest_dir + "/index.html", 'w')
+  f.write('<html><body>')
+
+  for index, img in enumerate(img_urls):
+    destfile = 'img' + str(index) + '.jpg'
+    print "Retrieving image: "+ img + ', into: ' + destfile
+    urllib.urlretrieve('http://code.google.com/' + img, dest_dir + "/" + destfile)
+    f.write('<img src="'+destfile+'">')
+
+  f.write('</body></html>')
+  f.close()
   
 
 def main():

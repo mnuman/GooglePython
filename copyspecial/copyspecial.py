@@ -58,7 +58,15 @@ def main():
   # +++your code here+++
   # Call your functions
   files = get_special_files(args[0])
-  print files
+  if tozip:
+    print "No zipper installed .. bailing out !"
+    exit(1)
+  else:
+    for file in files:
+      if todir:
+        shutil.copy(file, todir)
+      else:
+        print file
   
 if __name__ == "__main__":
   main()
