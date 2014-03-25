@@ -34,6 +34,22 @@ Suggested milestones for incremental development:
  -Fix main() to use the extract_names list
 """
 
+def merge(tuples):
+  merged = {}
+  for tuple in tuples:
+      if tuple[1] in merged:
+        if int(tuple[0]) < merged[tuple[1]]:
+          merged[tuple[1]] = int(tuple[0])
+      else:
+        merged[tuple[1]] = int(tuple[0])
+      if tuple[2] in merged:
+        if int(tuple[0]) < merged[tuple[2]]:
+          merged[tuple[2]] = int(tuple[0])
+      else:
+        merged[tuple[2]] = int(tuple[0])
+  return merged
+
+  
 def extract_names(filename):
   """
   Given a file name for baby.html, returns a list starting with the year string
@@ -41,9 +57,28 @@ def extract_names(filename):
   ['2006', 'Aaliyah 91', Aaron 57', 'Abagail 895', ' ...]
   """
   # +++your code here+++
-  return
+  f = open(filename,'r')
+  results = re.findall(r'<td>(\d+)</td><td>(\w+)</td><td>(\w+)</td>', f.read())
+  f.close()
+  return merge(results)
 
-
+def extract_year(filename):
+  f = open(filename,'r')
+  results = re.findall(r'<h3.*>Popularity in (\d\d\d\d)', f.read())
+  f.close()
+  return results[0]
+    
+    
+def do_output(lines,summary,filename):
+  if summary:
+    f = open(filename[0:-4]+'summary','w')
+    for line in lines:
+      f.write(line)
+    f.close()
+  else:
+    for line in lines:
+      print line
+      
 def main():
   # This command-line parsing code is provided.
   # Make a list of command line arguments, omitting the [0] element
@@ -63,6 +98,14 @@ def main():
   # +++your code here+++
   # For each filename, get the names, then either print the text output
   # or write it to a summary file
+  for fname in args:
+    year = extract_year(fname)
+    names = extract_names(fname)
+    sorted_output = [(year)]
+    for name in sorted(names.keys()):
+      sorted_output.append(name + '  ' + str(names[name]))
+    do_output(sorted_output, summary, fname)   
+  
   
 if __name__ == '__main__':
   main()
