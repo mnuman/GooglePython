@@ -17,7 +17,14 @@ import commands
 
 # +++your code here+++
 # Write functions and modify main() to call them
-
+def get_special_files(path):
+  names = os.listdir(path)
+  result = []
+  for fname in names:
+    match = re.findall('.*__\w+__.*', fname)
+    if match:
+      result.append(os.path.abspath(os.path.join(path,fname)))
+  return result
 
 
 def main():
@@ -50,6 +57,8 @@ def main():
 
   # +++your code here+++
   # Call your functions
+  files = get_special_files(args[0])
+  print files
   
 if __name__ == "__main__":
   main()
